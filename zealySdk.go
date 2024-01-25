@@ -60,9 +60,14 @@ func New(apiKey, subdomain string) *ZealySdk {
 
 // }
 
-func (z *ZealySdk) GetUserByEmail(email string) (interface{}, error) {
+func (z *ZealySdk) GetUserByEmail(email string) (*UserZealy, error) {
 	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "users?email=" + email
-	return makeReqApi(z.apiKey, endpoint, METHOD_GET)
+	userZealy := UserZealy{}
+	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &userZealy)
+	if err != nil {
+		return nil, err
+	}
+	return &userZealy, nil
 }
 
 func (z *ZealySdk) GetCommunityQuests() {
@@ -73,11 +78,10 @@ func (z *ZealySdk) GetCommunityClaimedQuests() {
 
 }
 
-func makeReqApi(apiKey, endpoint, method string) (interface{}, error) {
+func makeReqApi(apiKey, endpoint, method string, data interface{}) error {
 	var req *http.Request
 	var res *http.Response
 	var statuscode int = 0
-	var answer interface{}
 
 	var err error
 
@@ -118,33 +122,33 @@ func makeReqApi(apiKey, endpoint, method string) (interface{}, error) {
 			switch statuscode {
 			case http.StatusOK, http.StatusCreated, http.StatusAccepted:
 
-				err = json.Unmarshal(body, &answer)
+				err = json.Unmarshal(body, &data)
 				if err != nil {
 					log.Printf("Error unmarshaling token information received from api: %+v", err)
-					return nil, errors.New(ErrorParsingJson, fmt.Sprintf("Error unmarshaling token information received from api: %+v", err))
+					return errors.New(ErrorParsingJson, fmt.Sprintf("Error unmarshaling token information received from api: %+v", err))
 				}
 
-				return answer, nil
+				return nil
 
 			case http.StatusUnauthorized:
-				return nil, errors.New(ErrorUnauthorized, "The token used in not authorized to perform the requested operation")
+				return errors.New(ErrorUnauthorized, "The token used in not authorized to perform the requested operation")
 
 			default:
 				errorMsg := ErrorDTO{}
 				err := json.Unmarshal(body, &errorMsg)
 				if err != nil {
 					log.Printf("Error unmarshaling token information received from api: %+v", err)
-					return nil, fmt.Errorf(ErrorHttpStatus, statuscode)
+					return fmt.Errorf(ErrorHttpStatus, statuscode)
 				}
-				return nil, errors.New(errorMsg.Code, errorMsg.Message)
+				return errors.New(errorMsg.Code, errorMsg.Message)
 			}
 		} else {
 			log.Printf("error executing request with error %+v", err)
-			return nil, err
+			return err
 		}
 	} else {
 		log.Printf("error creating request to send to server %+v", err)
-		return nil, err
+		return err
 	}
 }
 

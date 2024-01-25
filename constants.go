@@ -1,7 +1,7 @@
 package zealygo
 
 const (
-	ApiUrl string = "https://api-v1.zealy.io/communities/%s"
+	ApiUrl string = "https://api-v1.zealy.io/communities/%s/"
 )
 
 const (
