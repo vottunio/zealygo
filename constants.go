@@ -1,7 +1,7 @@
 package zealygo
 
 const (
-	ApiUrl string = "https://api-v1.zealy.io/communities/%s/"
+	ApiUrl string = "https://api-v1.zealy.io/communities/%s"
 )
 
 const (
@@ -13,8 +13,9 @@ const (
 )
 
 const (
-	ErrorParsingJson  string = "ERROR_PARSING_JSON"
-	ErrorUnauthorized string = "ERROR_UNAUTHORIZED"
-	ErrorHttpStatus   string = "ERROR_HTTP_STATUS_%d"
+	ErrorParsingJson      string = "ERROR_PARSING_JSON"
+	ErrorUnauthorized     string = "ERROR_UNAUTHORIZED"
+	ErrorHttpStatus       string = "ERROR_HTTP_STATUS_%d"
+	ErrorIncorrectParamas string = "ERROR_INCORRECT_PARAMS"
 	//ErrorApiWrapperUrlNotSet string = "ERROR_API_WRAPPER_URL_NOT_SET"
 )

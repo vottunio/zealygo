@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"reflect"
-	"strings"
 	"time"
 
 	"github.com/vottun-com/utils/errors"
@@ -23,10 +21,48 @@ func New(apiKey, subdomain string) *ZealySdk {
 	return &ZealySdk{apiKey: apiKey, subdomain: subdomain}
 }
 
-func (z *ZealySdk) GetUserBySocialId(email, discordId, twitterId, discordHandle, ethAddress *string) (interface{}, error) {
-	userReq := userRequestDto{email: email, discordId: discordId, twitterId: twitterId, discordHandle: discordHandle, ethAddress: ethAddress}
-	return makeReqApi(z.apiKey, fmt.Sprintf(ApiUrl, z.subdomain)+"users", METHOD_GET, userReq)
+// func (z *ZealySdk) GetUserBySocialId(email, discordId, twitterId, discordHandle, ethAddress *string) (interface{}, error) {
+// 	var builder strings.Builder
+// 	params := make([]string, 0)
 
+// 	if email == nil && discordId == nil && twitterId == nil && discordHandle == nil && ethAddress == nil {
+// 		return nil, errors.New(ErrorIncorrectParamas, "At least one of the parameters has to be ")
+// 	}
+
+// 	builder.WriteString(fmt.Sprintf(ApiUrl, z.subdomain) + "users?")
+
+// 	if email != nil{
+// 		params = append(params, *email)
+// 	}
+// 	if discordId != nil{
+// 		params = append(params, *discordId)
+// 	}
+// 	if twitterId != nil{
+// 		params = append(params, *twitterId)
+// 	}
+// 	if discordHandle != nil{
+// 		params = append(params, *discordHandle)
+// 	}
+// 	if ethAddress != nil{
+// 		params = append(params, *ethAddress)
+// 	}
+
+// 	for i:=0;i<len(params);i++{
+// 		if i != len(params) - 1{
+
+// 		}
+
+// 	}
+
+// 	endpoint := builder.String()
+
+// 	return makeReqApi(z.apiKey, endpoint, METHOD_GET)
+
+// }
+
+func (z *ZealySdk) GetUserByEmail(email string) (interface{}, error) {
+	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "users?email=" + email
+	return makeReqApi(z.apiKey, endpoint, METHOD_GET)
 }
 
 func (z *ZealySdk) GetCommunityQuests() {
@@ -37,31 +73,35 @@ func (z *ZealySdk) GetCommunityClaimedQuests() {
 
 }
 
-func makeReqApi(apiKey, endpoint, method string, data interface{}) (interface{}, error) {
+func makeReqApi(apiKey, endpoint, method string) (interface{}, error) {
 	var req *http.Request
 	var res *http.Response
 	var statuscode int = 0
 	var answer interface{}
-	var builder strings.Builder
+
 	var err error
 
-	builder.WriteString(endpoint)
+	// builder.WriteString(endpoint)
 
-	if data != nil {
-		builder.WriteString("?")
-		refData := reflect.ValueOf(data)
-		for i := 0; i < refData.NumField(); i++ {
-			field := refData.Type().Field(i)
-			fieldValue := refData.Field(i)
-			if fieldValue.Interface() != nil {
-				builder.WriteString(field.Name)
-				builder.WriteString("=")
-				builder.WriteString(fmt.Sprintf("%v", fieldValue.Interface()))
-			}
+	// if data != nil {
+	// 	builder.WriteString("?")
+	// 	refData := reflect.ValueOf(data)
+	// 	s := refData.Elem()
+	// 	fmt.Printf("s.Kind(): %v\n", s.Kind())
+	// 	for i := 0; i < refData.NumField(); i++ {
+	// 		field := refData.Type().Field(i)
+	// 		fmt.Printf("field.Name: %v\n", field.Name)
+	// 		fieldValue := refData.Field(i)
 
-		}
-		endpoint = builder.String()
-	}
+	// 		if fieldValue.Interface() != nil {
+	// 			builder.WriteString(field.Name)
+	// 			builder.WriteString("=")
+	// 			builder.WriteString(fmt.Sprintf("%v", fieldValue.Interface()))
+	// 		}
+
+	// 	}
+	// 	endpoint = builder.String()
+	// }
 
 	if req, err = http.NewRequest(method, endpoint, nil); err == nil {
 		setReqHeaders(req, apiKey, method)
