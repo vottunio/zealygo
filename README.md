@@ -1,2 +1,2 @@
-# zealygo
-go dependency for zealy in go
+# zealy-sdk-vottun
+An SDK in go for Zealy integration
