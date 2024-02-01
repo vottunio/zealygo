@@ -99,9 +99,21 @@ func (z *ZealySdk) GetQuestById(questId string) (*ActivityZealy, error) {
 
 }
 
-func (z *ZealySdk) GetCommunityClaimedQuests(status, userId string) (*ActivityAnswer, error) {
+func (z *ZealySdk) GetCommunityClaimesByUserId(status, userId string) (*ActivityAnswer, error) {
 
 	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "claimed-quests?status=" + status + "&user_id=" + userId
+	activitiesZealy := ActivityAnswer{}
+	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &activitiesZealy)
+	if err != nil {
+		return nil, err
+	}
+	return &activitiesZealy, nil
+
+}
+
+func (z *ZealySdk) GetCommunityClaimsByQuestId(status, questId string) (*ActivityAnswer, error) {
+
+	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "claimed-quests?status=" + status + "&quest_id=" + questId
 	activitiesZealy := ActivityAnswer{}
 	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &activitiesZealy)
 	if err != nil {
