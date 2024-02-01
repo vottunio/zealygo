@@ -17,5 +17,6 @@ const (
 	ErrorUnauthorized     string = "ERROR_UNAUTHORIZED"
 	ErrorHttpStatus       string = "ERROR_HTTP_STATUS_%d"
 	ErrorIncorrectParamas string = "ERROR_INCORRECT_PARAMS"
+	ErrorActivityNotFound string = "ERROR_ACTIVITY_NOT_FOUND"
 	//ErrorApiWrapperUrlNotSet string = "ERROR_API_WRAPPER_URL_NOT_SET"
 )

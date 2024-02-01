@@ -70,11 +70,44 @@ func (z *ZealySdk) GetUserByEmail(email string) (*UserZealy, error) {
 	return &userZealy, nil
 }
 
-func (z *ZealySdk) GetCommunityQuests() {
+func (z *ZealySdk) GetCommunityQuests() (*[]ActivityZealy, error) {
+	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "quests"
+	activitiesZealy := []ActivityZealy{}
+	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &activitiesZealy)
+	if err != nil {
+		return nil, err
+	}
+	return &activitiesZealy, nil
 
 }
 
-func (z *ZealySdk) GetCommunityClaimedQuests() {
+func (z *ZealySdk) GetQuestById(questId string) (*ActivityZealy, error) {
+	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "quests"
+	activitiesZealy := []ActivityZealy{}
+	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &activitiesZealy)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, actZealy := range activitiesZealy {
+		if actZealy.ID == questId {
+			return &actZealy, nil
+		}
+	}
+
+	return nil, errors.New(ErrorActivityNotFound, "Activity does not exist")
+
+}
+
+func (z *ZealySdk) GetCommunityClaimedQuests(status, userId string) (*ActivityAnswer, error) {
+
+	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "claimed-quests?status=" + status + "&user_id=" + userId
+	activitiesZealy := ActivityAnswer{}
+	err := makeReqApi(z.apiKey, endpoint, METHOD_GET, &activitiesZealy)
+	if err != nil {
+		return nil, err
+	}
+	return &activitiesZealy, nil
 
 }
 
