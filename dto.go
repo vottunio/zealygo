@@ -88,12 +88,9 @@ type ClaimedActivityZealy struct {
 	RetriedAt      interface{} `json:"retriedAt"`
 	LastReviewerID interface{} `json:"lastReviewerId"`
 	Name           string      `json:"name"`
-	ValidationData struct {
-		Value   string `json:"value"`
-		Enabled bool   `json:"enabled"`
-	} `json:"validationData"`
-	Recurrence string `json:"recurrence"`
-	Email      string `json:"email"`
+	ValidationData struct{}    `json:"validationData"`
+	Recurrence     string      `json:"recurrence"`
+	Email          string      `json:"email"`
 }
 
 type ActivityZealy struct {
