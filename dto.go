@@ -55,12 +55,10 @@ type ActivityAnswer struct {
 
 type ClaimedActivityZealy struct {
 	User struct {
-		ID        string      `json:"id"`
-		Name      string      `json:"name"`
-		Avatar    interface{} `json:"avatar"`
-		Addresses struct {
-			Other string `json:"other"`
-		} `json:"addresses"`
+		ID               string      `json:"id"`
+		Name             string      `json:"name"`
+		Avatar           interface{} `json:"avatar"`
+		Addresses        interface{} `json:"addresses"`
 		DiscordHandle    interface{} `json:"discordHandle"`
 		TwitterUsername  string      `json:"twitterUsername"`
 		TwitterFollowers int         `json:"twitterFollowers"`
