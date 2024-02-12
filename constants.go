@@ -13,10 +13,11 @@ const (
 )
 
 const (
-	ErrorParsingJson      string = "ERROR_PARSING_JSON"
-	ErrorUnauthorized     string = "ERROR_UNAUTHORIZED"
-	ErrorHttpStatus       string = "ERROR_HTTP_STATUS_%d"
-	ErrorIncorrectParamas string = "ERROR_INCORRECT_PARAMS"
-	ErrorActivityNotFound string = "ERROR_ACTIVITY_NOT_FOUND"
+	ErrorParsingJson        string = "ERROR_PARSING_JSON"
+	ErrorUnauthorized       string = "ERROR_UNAUTHORIZED"
+	ErrorHttpStatus         string = "ERROR_HTTP_STATUS_%d"
+	ErrorIncorrectParamas   string = "ERROR_INCORRECT_PARAMS"
+	ErrorActivityNotFound   string = "ERROR_ACTIVITY_NOT_FOUND"
+	ErrorUserNotInCommunity string = "ERROR_USER_NOT_IN_COMMUNITY"
 	//ErrorApiWrapperUrlNotSet string = "ERROR_API_WRAPPER_URL_NOT_SET"
 )

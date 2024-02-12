@@ -21,45 +21,6 @@ func New(apiKey, subdomain string) *ZealySdk {
 	return &ZealySdk{apiKey: apiKey, subdomain: subdomain}
 }
 
-// func (z *ZealySdk) GetUserBySocialId(email, discordId, twitterId, discordHandle, ethAddress *string) (interface{}, error) {
-// 	var builder strings.Builder
-// 	params := make([]string, 0)
-
-// 	if email == nil && discordId == nil && twitterId == nil && discordHandle == nil && ethAddress == nil {
-// 		return nil, errors.New(ErrorIncorrectParamas, "At least one of the parameters has to be ")
-// 	}
-
-// 	builder.WriteString(fmt.Sprintf(ApiUrl, z.subdomain) + "users?")
-
-// 	if email != nil{
-// 		params = append(params, *email)
-// 	}
-// 	if discordId != nil{
-// 		params = append(params, *discordId)
-// 	}
-// 	if twitterId != nil{
-// 		params = append(params, *twitterId)
-// 	}
-// 	if discordHandle != nil{
-// 		params = append(params, *discordHandle)
-// 	}
-// 	if ethAddress != nil{
-// 		params = append(params, *ethAddress)
-// 	}
-
-// 	for i:=0;i<len(params);i++{
-// 		if i != len(params) - 1{
-
-// 		}
-
-// 	}
-
-// 	endpoint := builder.String()
-
-// 	return makeReqApi(z.apiKey, endpoint, METHOD_GET)
-
-// }
-
 func (z *ZealySdk) GetUserByEmail(email string) (*UserZealy, error) {
 	endpoint := fmt.Sprintf(ApiUrl, z.subdomain) + "users?email=" + email
 	userZealy := UserZealy{}
@@ -130,28 +91,6 @@ func makeReqApi(apiKey, endpoint, method string, data interface{}) error {
 
 	var err error
 
-	// builder.WriteString(endpoint)
-
-	// if data != nil {
-	// 	builder.WriteString("?")
-	// 	refData := reflect.ValueOf(data)
-	// 	s := refData.Elem()
-	// 	fmt.Printf("s.Kind(): %v\n", s.Kind())
-	// 	for i := 0; i < refData.NumField(); i++ {
-	// 		field := refData.Type().Field(i)
-	// 		fmt.Printf("field.Name: %v\n", field.Name)
-	// 		fieldValue := refData.Field(i)
-
-	// 		if fieldValue.Interface() != nil {
-	// 			builder.WriteString(field.Name)
-	// 			builder.WriteString("=")
-	// 			builder.WriteString(fmt.Sprintf("%v", fieldValue.Interface()))
-	// 		}
-
-	// 	}
-	// 	endpoint = builder.String()
-	// }
-
 	if req, err = http.NewRequest(method, endpoint, nil); err == nil {
 		setReqHeaders(req, apiKey, method)
 		client := &http.Client{
@@ -180,11 +119,18 @@ func makeReqApi(apiKey, endpoint, method string, data interface{}) error {
 
 			default:
 				errorMsg := ErrorDTO{}
-				err := json.Unmarshal(body, &errorMsg)
-				if err != nil {
-					log.Printf("Error unmarshaling token information received from api: %+v", err)
-					return fmt.Errorf(ErrorHttpStatus, statuscode)
+				var err error
+				if isJSON(body) {
+					err = json.Unmarshal(body, &errorMsg)
+					if err != nil {
+						log.Printf("Error unmarshaling token information received from api: %+v", err)
+						return fmt.Errorf(ErrorHttpStatus, statuscode)
+					}
+				} else {
+					errorMsg.Code = ErrorUserNotInCommunity
+					errorMsg.Message = string(body)
 				}
+
 				return errors.New(errorMsg.Code, errorMsg.Message)
 			}
 		} else {
@@ -202,4 +148,9 @@ func setReqHeaders(req *http.Request, apiKey, method string) {
 	if method == METHOD_POST {
 		req.Header.Set(CONTENT_TYPE, MIME_TYPE_JSON)
 	}
+}
+
+func isJSON(data []byte) bool {
+	var js map[string]interface{}
+	return json.Unmarshal(data, &js) == nil
 }
