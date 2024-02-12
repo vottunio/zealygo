@@ -127,7 +127,6 @@ func makeReqApi(apiKey, endpoint, method string, data interface{}) error {
 						return fmt.Errorf(ErrorHttpStatus, statuscode)
 					}
 				} else {
-					errorMsg.Code = ErrorUserNotInCommunity
 					errorMsg.Message = string(body)
 				}
 
