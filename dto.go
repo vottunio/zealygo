@@ -91,6 +91,9 @@ type ClaimedActivityZealy struct {
 	ValidationData struct{}    `json:"validationData"`
 	Recurrence     string      `json:"recurrence"`
 	Email          string      `json:"email"`
+	ReviewerID     *string     `json:"reviewerId"`
+	ReviewerName   *string     `json:"reviewerName"`
+	ReviewDate     *time.Time  `json:"reviewDate"`
 }
 
 type ActivityZealy struct {
